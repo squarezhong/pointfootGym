@@ -139,10 +139,15 @@ class PointFootRoughCfg(BaseConfig):
         class scales:
             action_rate = -0.01
             ang_vel_xy = -0.05
-            base_height = -2.0
+            ang_vel_yaw = 5.0
+            lin_vel_xy = 10.0
+            lin_vel_z = -0.5
+            base_pose = -5.0
+            continuous_contact = 1.0
+            base_height = -10.0
             collision = -50.0
             dof_acc = -2.5e-07
-            feet_air_time = 0.0
+            feet_air_time = 60
             torque_limits = -0.1
             torques = -2.5e-05
             feet_distance = -100
@@ -241,7 +246,7 @@ class PointFootRoughCfgPPO(BaseConfig):
         policy_class_name = 'ActorCritic'
         algorithm_class_name = 'PPO'
         num_steps_per_env = 24  # per iteration
-        max_iterations = 100000  # number of policy updates
+        max_iterations = 20000  # number of policy updates
 
         # logging
         save_interval = 1000  # check for potential saves every this many iterations

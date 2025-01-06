@@ -1096,6 +1096,29 @@ class PointFoot:
         # Penalize xy axes base angular velocity
         return torch.sum(torch.square(self.base_ang_vel[:, :2]), dim=1)
 
+    def _reward_ang_vel_yaw(self):
+        # Penalize yaw (z-axis) angular velocity
+        ang_val_yaw_err = torch.square(self.base_ang_vel[:, 2] - self.commands[:, 2])
+        return torch.exp(-ang_val_yaw_err / self.cfg.rewards.tracking_sigma)
+
+    def _reward_lin_vel_xy(self):
+        # Penalize linear velocity in xy plane
+        lin_vel_xy_err = torch.square(self.base_lin_vel[:, 0] - self.commands[:, 0]) + torch.square(self.base_lin_vel[:, 1] - self.commands[:, 1])
+        return torch.exp(-lin_vel_xy_err / self.cfg.rewards.tracking_sigma)
+    
+    def _reward_lin_vel_z(self):
+        # Penalize linear velocity in z-axis
+        return torch.square(self.base_lin_vel[:, 2])
+    
+    def _reward_base_pose(self):
+        # Penalize base pose error
+        return torch.sum(torch.square(self.projected_gravity[:, :2]), dim=1)
+
+    def _reward_continuous_contact(self):
+        # Reward continuous contact with the ground (like racewalking)
+        # one foot on ground is enough
+        return torch.sum(self.contact_forces[:, self.feet_indices, 2] > 0.1, dim=1) == 1
+
     def _reward_base_height(self):
         # Penalize base height away from target
         base_height = torch.mean(self.root_states[:, 2].unsqueeze(1) - self.measured_heights, dim=1)
