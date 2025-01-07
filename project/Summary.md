@@ -1,4 +1,4 @@
-# Code Summary
+# Appendix: Code Summary
 
 [TOC]
 
@@ -78,7 +78,7 @@ This file contains a class `BaseConfig` that used to initialize all its member c
 Initialize all member classes by calling `self.init_member_classes(self)`
 
 - static method `init_member_classes(obj)`:
-Recursively initialize all member classes of the given object.
+  Recursively initialize all member classes of the given object.
     - iterate through all the attributes of the object.
     - retrieve the attribute object using `getattr()`
     - If the attribute is an instance, **instantiate** it and sets the attribute to the instance instead of the type .Then call `init_member_classes()` on the instance (recursively).
@@ -127,7 +127,7 @@ class `PointFoot`: Includes following method.
 
     - First clip actions using `torch.clip()`
     - Render the viewer using `self.render()`
-    - TODO: How to simulate
+    - Simulate using `self.post_physics_step()`
     - return clipped obs, clipped states (None), rewards, dones and infos
     - return `self.proprioceptive_obs_buf`, `self.privileged_obs_buf`, `self.rew_buf`, `self.reset_buf`, `self.extras`
 
@@ -135,15 +135,13 @@ class `PointFoot`: Includes following method.
 
     Simulation in physics.
 
-    TODO
-
 - method `_check_if_include_feet_height_rewards(self)`
 
     Check whether `feet_height` in the reward scale directory, and return a Boolean.
 
 - method `check_termination(self)`
 
-    Check if environments need to be reset by `self.termination_contact_indices` in `self.contact_forces` and whether time out. TODO: HOW？
+    Check if environments need to be reset by `self.termination_contact_indices` in `self.contact_forces` and whether time out.
 
 - method `reset_idx(self, env_ids)`
 
@@ -200,8 +198,6 @@ class `PointFoot`: Includes following method.
     self.dof_vel * self.obs_scales.dof_vel
     self.actions
     self.commands[:, :3] * self.commands_scale`
-    
-    TODO: As same as privileged observation? What the meaning is "privileged" and "proprioceptive"?
     
 - method `create_sim(self)`
 
@@ -326,8 +322,6 @@ class `PointFoot`: Includes following method.
 
   Initialize torch tensors which will contain simulation states and processed quantities.
 
-  TODO: need to read carefully
-
 - method `_prepare_reward_function(self)`
 
   Prepares a list of reward functions, which will be called to compute the total reward.
@@ -359,7 +353,6 @@ class `PointFoot`: Includes following method.
             2.2 calls DOF and Rigid shape properties callbacks,
             2.3 create actor with these properties and add them to the env
         3.Store indices of different bodies of the robot
-            TODO: Need to be read carefully.
 
 - method `_get_env_origins(self)`
 
