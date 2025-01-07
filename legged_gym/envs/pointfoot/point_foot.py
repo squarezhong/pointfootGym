@@ -89,6 +89,13 @@ class PointFoot:
                 self.viewer, gymapi.KEY_ESCAPE, "QUIT")
             self.gym.subscribe_viewer_keyboard_event(
                 self.viewer, gymapi.KEY_V, "toggle_viewer_sync")
+            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_W, "xfaster")
+            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_S, "xslower")
+            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_A, "yfaster")
+            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_D, "yslower")
+            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_Q, "counterclockwise")
+            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_E, "clockwise")
+            
         self._include_feet_height_rewards = self._check_if_include_feet_height_rewards()
         if not self.headless:
             self.set_camera(self.cfg.viewer.pos, self.cfg.viewer.lookat)
@@ -121,6 +128,18 @@ class PointFoot:
                     sys.exit()
                 elif evt.action == "toggle_viewer_sync" and evt.value > 0:
                     self.enable_viewer_sync = not self.enable_viewer_sync
+                elif evt.action == "xfaster" and evt.value > 0:
+                    self.commands[:, 0] += 0.1
+                elif evt.action == "xslower" and evt.value > 0:
+                    self.commands[:, 0] -= 0.1
+                elif evt.action == "yfaster" and evt.value > 0:
+                    self.commands[:, 1] += 0.1
+                elif evt.action == "yslower" and evt.value > 0:
+                    self.commands[:, 0] -= 0.1
+                elif evt.action == "counterclockwise" and evt.value > 0:
+                    self.commands[:, 2] += 0.1
+                elif evt.action == "clockwise" and evt.value > 0:
+                    self.commands[:, 2] -= 0.1
 
             # fetch results
             if self.device != 'cpu':
