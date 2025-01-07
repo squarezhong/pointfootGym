@@ -26,6 +26,7 @@
         <mesh name="hip_R_Link" file="hip_R_Link.STL" />
         <mesh name="knee_R_Link" file="knee_R_Link.STL" />
         <mesh name="foot_R_Link" file="foot_R_Link.STL" />
+        <mesh name="perlin" file="perlin.obj" />
     </asset>
 
     <asset>
@@ -38,7 +39,25 @@
     <worldbody>
         <geom name="floor" rgba="0.5 0.6 0.7 1" pos="0 0 0" size="0 0 0.25" type="plane" material="matplane" condim="3"/>
 
-        <body name="staircase" pos="1 0 0.1">
+        <!-- test terrain -->
+        <body name="up_ramp" pos="1 0 0.1" euler="0 0 -1.5708">
+            <geom type="box" size="1 1 0.1" pos="0 0 0" euler="0.3 0 0" rgba="0.5 0.5 0.5 1" friction="1.0 0.1 0.01"/>
+        </body>
+        <body name="platform" pos="2.9 0 0.4" euler="0 0 0">
+            <geom type="box" size="1 1 0.1" pos="0 0 0" rgba="0.5 0.5 0.5 1" friction="1.0 0.1 0.01"/>
+        </body>
+        <body name="down_ramp" pos="4.8 0 0.1" euler="0 0 -1.5708">
+            <geom type="box" size="1 1 0.1" pos="0 0 0" euler="-0.3 0 0" rgba="0.5 0.5 0.5 1" friction="1.0 0.1 0.01"/>
+        </body>
+        <body name="perlin_terrain" pos="7 0 0">
+            <geom type="mesh" mesh="perlin" pos="0 0 0.95" rgba="0.5 0.5 0.5 1" friction="1.0 0.1 0.01"/>
+            <geom type="mesh" mesh="perlin" pos="2 0 0.95" rgba="0.5 0.5 0.5 1" friction="1.0 0.1 0.01"/>
+            <geom type="mesh" mesh="perlin" pos="0 2 0.95" rgba="0.5 0.5 0.5 1" friction="1.0 0.1 0.01"/>
+            <geom type="mesh" mesh="perlin" pos="2 2 0.95" rgba="0.5 0.5 0.5 1" friction="1.0 0.1 0.01"/>
+            <geom type="mesh" mesh="perlin" pos="0 -2 0.95" rgba="0.5 0.5 0.5 1" friction="1.0 0.1 0.01"/>
+            <geom type="mesh" mesh="perlin" pos="2 -2 0.95" rgba="0.5 0.5 0.5 1" friction="1.0 0.1 0.01"/>
+        </body>
+        <body name="staircase" pos="12 0 0.1">
             <geom type="box" size="0.5 1 0.1" pos="0.3 0 0.0" rgba="0.5 0.5 0.5 1"/>
             <geom type="box" size="0.5 1 0.1" pos="0.6 0 0.2" rgba="0.5 0.5 0.5 1"/>
             <geom type="box" size="0.5 1 0.1" pos="0.9 0 0.4" rgba="0.5 0.5 0.5 1"/>

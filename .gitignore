@@ -52,6 +52,9 @@ Thumbs.db
 .vscode
 # logs
 logs
+!logs/pointfoot_rough/
+!logs/pointfoot_rough/Jan06_03-20-58_/
+!logs/pointfoot_rough/Jan06_03-20-58_/*
 runs
 
 # other

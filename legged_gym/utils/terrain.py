@@ -100,10 +100,12 @@ class Terrain:
             terrain = terrain_utils.SubTerrain("terrain",
                               width=self.width_per_env_pixels,
                               length=self.width_per_env_pixels,
-                              vertical_scale=self.vertical_scale,
-                              horizontal_scale=self.horizontal_scale)
+                              vertical_scale=self.cfg.vertical_scale,
+                              horizontal_scale=self.cfg.horizontal_scale)
 
-            eval(terrain_type)(terrain, **self.cfg.terrain_kwargs.terrain_kwargs)
+            # eval(terrain_type)(terrain, **self.cfg.terrain_kwargs.terrain_kwargs)
+            # tmp modification since I don't know how to debug this
+            eval(terrain_type)(terrain)
             self.add_terrain_to_map(terrain, i, j)
     
     def make_terrain(self, choice, difficulty):
@@ -185,3 +187,11 @@ def pit_terrain(terrain, depth, platform_size=1.):
     y1 = terrain.width // 2 - platform_size
     y2 = terrain.width // 2 + platform_size
     terrain.height_field_raw[x1:x2, y1:y2] = -depth
+    
+# plain terrain for task2 and task3
+def plain_terrain(terrain):
+    x1 = 0
+    x2 = terrain.length 
+    y1 = 0
+    y2 = terrain.width
+    terrain.height_field_raw[x1:x2, y1:y2] = 0
