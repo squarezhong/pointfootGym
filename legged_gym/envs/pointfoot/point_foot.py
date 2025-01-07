@@ -89,13 +89,6 @@ class PointFoot:
                 self.viewer, gymapi.KEY_ESCAPE, "QUIT")
             self.gym.subscribe_viewer_keyboard_event(
                 self.viewer, gymapi.KEY_V, "toggle_viewer_sync")
-            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_W, "xfaster")
-            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_S, "xslower")
-            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_A, "yfaster")
-            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_D, "yslower")
-            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_Q, "counterclockwise")
-            self.gym.subscribe_viewer_keyboard_event(self.viewer, gymapi.KEY_E, "clockwise")
-            
         self._include_feet_height_rewards = self._check_if_include_feet_height_rewards()
         if not self.headless:
             self.set_camera(self.cfg.viewer.pos, self.cfg.viewer.lookat)
@@ -128,18 +121,6 @@ class PointFoot:
                     sys.exit()
                 elif evt.action == "toggle_viewer_sync" and evt.value > 0:
                     self.enable_viewer_sync = not self.enable_viewer_sync
-                elif evt.action == "xfaster" and evt.value > 0:
-                    self.commands[:, 0] += 0.1
-                elif evt.action == "xslower" and evt.value > 0:
-                    self.commands[:, 0] -= 0.1
-                elif evt.action == "yfaster" and evt.value > 0:
-                    self.commands[:, 1] += 0.1
-                elif evt.action == "yslower" and evt.value > 0:
-                    self.commands[:, 0] -= 0.1
-                elif evt.action == "counterclockwise" and evt.value > 0:
-                    self.commands[:, 2] += 0.1
-                elif evt.action == "clockwise" and evt.value > 0:
-                    self.commands[:, 2] -= 0.1
 
             # fetch results
             if self.device != 'cpu':
@@ -1114,29 +1095,6 @@ class PointFoot:
     def _reward_ang_vel_xy(self):
         # Penalize xy axes base angular velocity
         return torch.sum(torch.square(self.base_ang_vel[:, :2]), dim=1)
-
-    def _reward_ang_vel_yaw(self):
-        # Penalize yaw (z-axis) angular velocity
-        ang_val_yaw_err = torch.square(self.base_ang_vel[:, 2] - self.commands[:, 2])
-        return torch.exp(-ang_val_yaw_err / self.cfg.rewards.tracking_sigma)
-
-    def _reward_lin_vel_xy(self):
-        # Penalize linear velocity in xy plane
-        lin_vel_xy_err = torch.square(self.base_lin_vel[:, 0] - self.commands[:, 0]) + torch.square(self.base_lin_vel[:, 1] - self.commands[:, 1])
-        return torch.exp(-lin_vel_xy_err / self.cfg.rewards.tracking_sigma)
-    
-    def _reward_lin_vel_z(self):
-        # Penalize linear velocity in z-axis
-        return torch.square(self.base_lin_vel[:, 2])
-    
-    def _reward_base_pose(self):
-        # Penalize base pose error
-        return torch.sum(torch.square(self.projected_gravity[:, :2]), dim=1)
-
-    def _reward_continuous_contact(self):
-        # Reward continuous contact with the ground (like racewalking)
-        # one foot on ground is enough
-        return torch.sum(self.contact_forces[:, self.feet_indices, 2] > 0.1, dim=1) == 1
 
     def _reward_base_height(self):
         # Penalize base height away from target
