@@ -255,5 +255,5 @@ class PointFootRoughCfgPPO(BaseConfig):
         # load and resume
         resume = True
         load_run = "Jan06_03-20-58_"  # -1 = last run
-        checkpoint = 8000  # -1 = last saved model
+        checkpoint = 7000  # -1 = last saved model
         resume_path = None  # updated from load_run and chkpt
